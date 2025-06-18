@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QQ功能助手 - 打开QQ/QQ群 & 获取头像</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a6dff, #00c6ff);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .logo {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(45deg, #12B7F5, #0084FF);
+            border-radius: 22px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 15px;
+            box-shadow: 0 8px 20px rgba(0, 132, 255, 0.4);
+        }
+        
+        .logo i {
+            font-size: 45px;
+            color: white;
+        }
+        
+        h1 {
+            color: #0084FF;
+            font-size: 30px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 7px 20px rgba(0, 0, 0, 0.06);
+            border: 1px solid #eef6ff;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 132, 255, 0.15);
+        }
+        
+        .card-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #0084FF;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        
+        .card-title i {
+            margin-right: 12px;
+            background: #e6f4ff;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 500;
+            font-size: 17px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 14px;
+            font-size: 17px;
+            transition: all 0.3s;
+            background: #f9fbfe;
+        }
+        
+        input:focus {
+            border-color: #0084FF;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.2);
+            background: white;
+        }
+        
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 17px;
+            border: none;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .btn i {
+            margin-right: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #0084FF, #00a2ff);
+            color: white;
+            box-shadow: 0 6px 18px rgba(0, 132, 255, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 22px rgba(0, 132, 255, 0.5);
+            background: linear-gradient(to right, #0077e6, #0095f0);
+        }
+        
+        .btn-secondary {
+            background: #f0f7ff;
+            color: #0084FF;
+            border: 2px solid #cce5ff;
+        }
+        
+        .btn-secondary:hover {
+            background: #e1f0ff;
+        }
+        
+        .btn-tertiary {
+            background: #f9f9f9;
+            color: #666;
+            border: 2px solid #eee;
+        }
+        
+        .btn-tertiary:hover {
+            background: #f0f0f0;
+        }
+        
+        .avatar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 25px;
+        }
+        
+        .avatar-placeholder {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 4px solid #e1f0ff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .avatar-placeholder i {
+            font-size: 45px;
+            color: #aad4ff;
+        }
+        
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .tips {
+            background: #e6f4ff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 25px;
+            font-size: 15px;
+            color: #555;
+            border: 1px solid #cce5ff;
+        }
+        
+        .tips h3 {
+            color: #0084FF;
+            margin-bottom: 12px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tips h3 i {
+            margin-right: 10px;
+        }
+        
+        .tips ul {
+            padding-left: 22px;
+        }
+        
+        .tips li {
+            margin-bottom: 8px;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 18px;
+            margin: 20px 0;
+            border-radius: 14px;
+            display: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: #e8f7f0;
+            color: #0a9b5b;
+            border: 2px solid #a8e6bf;
+        }
+        
+        .error {
+            background: #fdecea;
+            color: #f44336;
+            border: 2px solid #f9c7c3;
+        }
+        
+        .backup-options {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f9fbff;
+            border-radius: 16px;
+            border: 2px dashed #cce5ff;
+        }
+        
+        .backup-title {
+            color: #ff6b00;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .backup-title i {
+            margin-right: 10px;
+        }
+        
+        .option-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .option-row .btn {
+            flex: 1;
+            padding: 14px;
+            font-size: 16px;
+        }
+        
+        .browser-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+                border-radius: 18px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .btn {
+                padding: 16px;
+                font-size: 17px;
+            }
+            
+            .option-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fab fa-qq"></i>
+            </div>
+            <h1>QQ功能助手</h1>
+            <p class="subtitle">一键打开QQ/QQ群 · 获取QQ头像</p>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-comment-dots"></i>打开QQ聊天
+            </h2>
+            <div class="input-group">
+                <label for="qqNumber">输入QQ号码：</label>
+                <input type="number" id="qqNumber" placeholder="请输入要聊天的QQ号码" value="3113943068">
+            </div>
+            <button class="btn btn-primary" id="openQQBtn">
+                <i class="fab fa-qq"></i> 打开QQ聊天
+            </button>
+            
+            <div class="backup-options" id="qqBackup">
+                <div class="backup-title">
+                    <i class="fas fa-exclamation-triangle"></i> 跳转失败？请尝试以下方法
+                </div>
+                <p>当前浏览器限制直接打开QQ，请选择：</p>
+                <div class="option-row">
+                    <button class="btn btn-secondary" id="copyQQUrl">
+                        <i class="fas fa-copy"></i> 复制链接
+                    </button>
+                    <button class="btn btn-secondary" id="openInBrowser">
+                        <i class="fas fa-external-link-alt"></i> 浏览器打开
+                    </button>
+                </div>
+                <div class="option-row">
+                    <button class="btn btn-tertiary" id="downloadQQ">
+                        <i class="fas fa-download"></i> 下载QQ
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-users"></i>打开QQ群
+            </h2>
+            <div class="input-group">
+                <label for="qqGroup">输入QQ群号：</label>
+                <input type="number" id="qqGroup" placeholder="请输入要打开的QQ群号" value="932144070">
+            </div>
+            <button class="btn btn-primary" id="openGroupBtn">
+                <i class="fas fa-door-open"></i> 打开QQ群
+            </button>
+            
+            <div class="backup-options" id="groupBackup">
+                <div class="backup-title">
+                    <i class="fas fa-exclamation-triangle"></i> 跳转失败？请尝试以下方法
+                </div>
+                <p>当前浏览器限制直接打开QQ群，请选择：</p>
+                <div class="option-row">
+                    <button class="btn btn-secondary" id="copyGroupUrl">
+                        <i class="fas fa-copy"></i> 复制群链接
+                    </button>
+                    <button class="btn btn-secondary" id="openGroupInBrowser">
+                        <i class="fas fa-external-link-alt"></i> 浏览器打开
+                    </button>
+                </div>
+                <div class="option-row">
+                    <button class="btn btn-tertiary" id="downloadQQGroup">
+                        <i class="fas fa-download"></i> 下载QQ
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-user-circle"></i>获取QQ头像
+            </h2>
+            <div class="input-group">
+                <label for="qqAvatar">输入QQ号码：</label>
+                <input type="number" id="qqAvatar" placeholder="请输入要获取头像的QQ号码" value="3113943068">
+            </div>
+            <button class="btn btn-primary" id="getAvatarBtn">
+                <i class="fas fa-download"></i> 获取QQ头像
+            </button>
+            
+            <div class="avatar-container">
+                <div class="avatar-placeholder">
+                    <i class="fas fa-user"></i>
+                    <img id="avatarImg" class="avatar-img" alt="QQ头像">
+                </div>
+                <button class="btn btn-secondary" id="downloadBtn" style="display:none; max-width:220px;">
+                    <i class="fas fa-download"></i> 下载头像
+                </button>
+            </div>
+        </div>
+        
+        <div class="status" id="statusMsg"></div>
+        
+        <div class="tips">
+            <h3><i class="fas fa-lightbulb"></i> 使用提示：</h3>
+            <ul>
+                <li><strong>跳转问题解决方案</strong>：微信内需点击右上角在浏览器中打开</li>
+                <li><strong>头像获取</strong>：使用腾讯官方API，支持任意QQ号</li>
+                <li><strong>兼容性</strong>：在手机自带浏览器中使用效果最佳</li>
+                <li><strong>备用方案</strong>：跳转失败时可复制链接或下载QQ</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 显示状态消息
+        function showStatus(message, isSuccess) {
+            const statusMsg = document.getElementById('statusMsg');
+            statusMsg.textContent = message;
+            statusMsg.className = 'status ' + (isSuccess ? 'success' : 'error');
+            statusMsg.style.display = 'block';
+            
+            // 4秒后隐藏消息
+            setTimeout(() => {
+                statusMsg.style.display = 'none';
+            }, 4000);
+        }
+        
+        // 复制文本到剪贴板
+        function copyToClipboard(text, successMsg) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showStatus(successMsg, true);
+                } else {
+                    showStatus('复制失败，请手动复制', false);
+                }
+            } catch (err) {
+                showStatus('复制失败，请手动复制: ' + text, false);
+            }
+            
+            document.body.removeChild(textarea);
+        }
+        
+        // 尝试跳转QQ
+        function openQQ(qqNumber) {
+            // 记录跳转前页面可见状态
+            const pageVisibleBefore = document.visibilityState === 'visible';
+            
+            // 尝试多种协议
+            const protocols = [
+                `tencent://message/?uin=${qqNumber}`,
+                `mqqwpa://im/chat?chat_type=wpa&uin=${qqNumber}`,
+                `mqqapi://card/show_pslcard?src_type=internal&source=sharecard&version=1&uin=${qqNumber}`
+            ];
+            
+            let currentIndex = 0;
+            const tryNextProtocol = () => {
+                if (currentIndex < protocols.length) {
+                    window.location.href = protocols[currentIndex];
+                    currentIndex++;
+                    
+                    // 检查是否跳转成功
+                    setTimeout(() => {
+                        if (document.visibilityState === 'visible') {
+                            tryNextProtocol();
+                        }
+                    }, 800);
+                } else {
+                    // 所有协议都失败，显示备用方案
+                    document.getElementById('qqBackup').style.display = 'block';
+                    showStatus('跳转失败，请尝试备用方法', false);
+                }
+            };
+            
+            tryNextProtocol();
+        }
+        
+        // 尝试跳转QQ群
+        function openQQGroup(qqGroup) {
+            // 记录跳转前页面可见状态
+            const pageVisibleBefore = document.visibilityState === 'visible';
+            
+            // 尝试多种协议
+            const protocols = [
+                `mqqapi://card/show_pslcard?src_type=internal&version=1&uin=${qqGroup}&card_type=group&source=qrcode`,
+                `mqqapi://card/show_pslcard?src_type=internal&version=1&uin=${qqGroup}&card_type=group`,
+                `tencent://groupwpa/?subcmd=all&param=${qqGroup}`
+            ];
+            
+            let currentIndex = 0;
+            const tryNextProtocol = () => {
+                if (currentIndex < protocols.length) {
+                    window.location.href = protocols[currentIndex];
+                    currentIndex++;
+                    
+                    // 检查是否跳转成功
+                    setTimeout(() => {
+                        if (document.visibilityState === 'visible') {
+                            tryNextProtocol();
+                        }
+                    }, 800);
+                } else {
+                    // 所有协议都失败，显示备用方案
+                    document.getElementById('groupBackup').style.display = 'block';
+                    showStatus('群跳转失败，请尝试备用方法', false);
+                }
+            };
+            
+            tryNextProtocol();
+        }
+        
+        // 打开QQ聊天
+        document.getElementById('openQQBtn').addEventListener('click', function() {
+            const qqNumber = document.getElementById('qqNumber').value;
+            if (!qqNumber) {
+                showStatus('请输入QQ号码', false);
+                return;
+            }
+            
+            openQQ(qqNumber);
+        });
+        
+        // 打开QQ群
+        document.getElementById('openGroupBtn').addEventListener('click', function() {
+            const qqGroup = document.getElementById('qqGroup').value;
+            if (!qqGroup) {
+                showStatus('请输入QQ群号', false);
+                return;
+            }
+            
+            openQQGroup(qqGroup);
+        });
+        
+        // 获取QQ头像
+        document.getElementById('getAvatarBtn').addEventListener('click', function() {
+            const qqAvatar = document.getElementById('qqAvatar').value;
+            if (!qqAvatar) {
+                showStatus('请输入QQ号码', false);
+                return;
+            }
+            
+            // 使用腾讯官方API获取头像
+            const avatarUrl = `https://q1.qlogo.cn/g?b=qq&nk=${qqAvatar}&s=640`;
+            const avatarImg = document.getElementById('avatarImg');
+            
+            // 显示头像
+            avatarImg.onload = function() {
+                avatarImg.style.display = 'block';
+                document.querySelector('.avatar-placeholder i').style.display = 'none';
+                document.getElementById('downloadBtn').style.display = 'block';
+                showStatus('头像获取成功！', true);
+            };
+            
+            avatarImg.onerror = function() {
+                showStatus('获取头像失败，请检查QQ号', false);
+            };
+            
+            avatarImg.src = avatarUrl;
+        });
+        
+        // 下载头像
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            const avatarImg = document.getElementById('avatarImg');
+            const qqAvatar = document.getElementById('qqAvatar').value;
+            const link = document.createElement('a');
+            link.href = avatarImg.src;
+            link.download = `qq-avatar-${qqAvatar}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showStatus('头像下载成功！', true);
+        });
+        
+        // 复制QQ聊天链接
+        document.getElementById('copyQQUrl').addEventListener('click', function() {
+            const qqNumber = document.getElementById('qqNumber').value;
+            copyToClipboard(`tencent://message/?uin=${qqNumber}`, 'QQ聊天链接已复制！');
+        });
+        
+        // 复制QQ群链接
+        document.getElementById('copyGroupUrl').addEventListener('click', function() {
+            const qqGroup = document.getElementById('qqGroup').value;
+            copyToClipboard(`mqqapi://card/show_pslcard?src_type=internal&version=1&uin=${qqGroup}&card_type=group&source=qrcode`, 'QQ群链接已复制！');
+        });
+        
+        // 在浏览器中打开QQ
+        document.getElementById('openInBrowser').addEventListener('click', function() {
+            const qqNumber = document.getElementById('qqNumber').value;
+            window.open(`https://wpa.qq.com/msgrd?v=3&uin=${qqNumber}&site=qq&menu=yes`, '_blank');
+        });
+        
+        // 在浏览器中打开QQ群
+        document.getElementById('openGroupInBrowser').addEventListener('click', function() {
+            const qqGroup = document.getElementById('qqGroup').value;
+            window.open(`https://jq.qq.com/?_wv=1027&k=KEY`, '_blank');
+        });
+        
+        // 下载QQ
+        document.getElementById('downloadQQ').addEventListener('click', function() {
+            window.open('https://im.qq.com/download', '_blank');
+        });
+        
+        // 下载QQ（群备用）
+        document.getElementById('downloadQQGroup').addEventListener('click', function() {
+            window.open('https://im.qq.com/download', '_blank');
+        });
+    </script>
+</body>
+</html>
